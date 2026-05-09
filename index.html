@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>PersonaMind AI - Tes Kepribadian Paling Akurat 2026</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 50%, #0a0a1a, #03030a);
+            color: #eef2ff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 10px;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(15, 25, 45, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .glass-card {
+            background: rgba(20, 30, 55, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 32px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.7);
+            box-shadow: 0 0 20px rgba(99,102,241,0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Neon Glow */
+        .neon-btn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border: none;
+            box-shadow: 0 0 15px rgba(79,70,229,0.6);
+            transition: all 0.2s ease;
+        }
+        .neon-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(124,58,237,0.9);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .typing {
+            overflow: hidden;
+            border-right: 2px solid #a855f7;
+            white-space: pre-wrap;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #a855f7; }
+        }
+
+        /* Background Particles */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(99,102,241,0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(4px);
+        }
+
+        /* Progress Bar */
+        .progress-fill {
+            background: linear-gradient(90deg, #4f46e5, #c084fc);
+            box-shadow: 0 0 8px #a855f7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .glass-card { border-radius: 24px; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="particles"></div>
+
+<div id="app"></div>
+
+<script>
+    // ----------------------------- ENHANCED PERSONALITY DATABASE -----------------------------
+    // AI Personality Engine: generates unique result based on weighted answers
+    const generatePersonalityResult = (answers, userName) => {
+        // Simulasi AI analysis dari 60 jawaban (dummy 60 item, tapi fleksibel)
+        let scores = {
+            E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0,  // MBTI
+            openness: 0, conscientiousness: 0, extraversion: 0, agreeableness: 0, neuroticism: 0, // Big5
+            discD: 0, discI: 0, discS: 0, discC: 0,
+            enneagram: 0,
+            logic: 0, empathy: 0, creativity: 0, discipline: 0, emotional: 0
+        };
+        
+        // Proses jawaban (angka 0-4)
+        answers.forEach((val, idx) => {
+            let mod = idx % 10;
+            if (mod < 2) scores.E += val; else if (mod < 4) scores.N += val;
+            if (mod % 3 === 0) scores.openness += val;
+            if (mod % 5 === 1) scores.conscientiousness += val;
+            scores.creativity += (val % 3);
+            scores.empathy += (val % 4);
+            scores.logic += (val % 5);
+            scores.discipline += (val % 3);
+            scores.discD += val * 0.3;
+            scores.discI += val * 0.2;
+            scores.discS += val * 0.25;
+            scores.discC += val * 0.35;
+        });
+        
+        // MBTI typology
+        let mbti = `${scores.E > scores.I ? 'E' : 'I'}${scores.N > scores.S ? 'N' : 'S'}${scores.T > scores.F ? 'T' : 'F'}${scores.J > scores.P ? 'J' : 'P'}`;
+        let mbtiNames = {
+            'INTJ':'Arsitek', 'INTP':'Logikawan', 'ENTJ':'Komandan', 'ENTP':'Debater',
+            'INFJ':'Advokat', 'INFP':'Mediator', 'ENFJ':'Guru', 'ENFP':'Kampanyator',
+            'ISTJ':'Logistik', 'ISFJ':'Pelindung', 'ESTJ':'Eksekutif', 'ESFJ':'Konsul',
+            'ISTP':'Virtuoso', 'ISFP':'Petualang', 'ESTP':'Pengusaha', 'ESFP':'Penghibur'
+        };
+        let mbtiLabel = mbtiNames[mbti] || 'Pemikir Unik';
+        
+        // Enneagram (based on harmony)
+        let enneagramTypes = ['The Reformer','The Helper','The Achiever','The Individualist','The Investigator','The Loyalist','The Enthusiast','The Challenger','The Peacemaker'];
+        let enneagramIdx = Math.floor((scores.conscientiousness + scores.empathy) % 9);
+        let enneagram = enneagramTypes[enneagramIdx];
+        
+        // DISC Dominant
+        let discMap = { D: scores.discD, I: scores.discI, S: scores.discS, C: scores.discC };
+        let discDominant = Object.keys(discMap).reduce((a,b) => discMap[a] > discMap[b] ? a : b, 'D');
+        let discFull = { D:'Dominance', I:'Influence', S:'Steadiness', C:'Compliance' }[discDominant];
+        
+        // Introvert/Extrovert %
+        let introExtro = ((scores.E / (scores.E + scores.I + 0.01)) * 100).toFixed(0);
+        let creativityLvl = Math.min(95, (scores.creativity / 15) * 100).toFixed(0);
+        let empathyLvl = Math.min(95, (scores.empathy / 18) * 100).toFixed(0);
+        let logicLvl = Math.min(95, (scores.logic / 25) * 100).toFixed(0);
+        let disciplineLvl = Math.min(95, (scores.discipline / 12) * 100).toFixed(0);
+        let emotionalLvl = Math.min(90, (scores.emotional + 30) % 100).toFixed(0);
+        
+        // Big Five Radar
+        let bigFive = {
+            openness: Math.min(100, (scores.openness / 12) * 100 + 20),
+            conscientiousness: Math.min(100, (scores.conscientiousness / 10) * 100 + 15),
+            extraversion: Math.min(100, (scores.extraversion + scores.E) / 18 * 100),
+            agreeableness: Math.min(100, (scores.agreeableness + scores.empathy) / 20 * 100 + 10),
+            neuroticism: Math.min(100, (scores.neuroticism + 25) % 95)
+        };
+        
+        // Career & Personality Description AI generative
+        const careers = ['AI Engineer', 'UX Designer', 'Startup Founder', 'Psikolog', 'Content Creator', 'Data Scientist', 'Marketing Strategist', 'Penulis', 'Arsitek', 'Community Leader'];
+        let careerRec = careers[Math.floor(Math.random() * careers.length)];
+        if (logicLvl > 70) careerRec = 'Data Scientist / AI Engineer';
+        if (creativityLvl > 75) careerRec = 'Creative Director / Designer';
+        if (discDominant === 'D') careerRec = 'CEO / Entrepreneur';
+        if (discDominant === 'I') careerRec = 'Public Speaker / Marketing';
+        
+        const description = `${userName} — Kamu adalah pribadi dengan kombinasi unik antara ${mbtiLabel} dan tipe ${discFull}. 
+        Dunia batinmu terasa seperti perpustakaan luas yang berisi ide-ide cemerlang. Di luar kamu tampak ${introExtro > 55 ? 'antusias dan terbuka' : 'tenang dan penuh perhatian'}, 
+        namun pikiranmu bagaikan pusaran analisis dan perasaan. Kamu memiliki ${creativityLvl > 70 ? 'imajinasi liar & inovatif' : 'ketelitian yang tajam'}, 
+        dan keputusanmu seringkali dipengaruhi oleh keseimbangan antara logika (${logicLvl}%) dan empati (${empathyLvl}%). 
+        Kamu cenderung ${disciplineLvl > 70 ? 'disiplin dan terstruktur' : 'fleksibel & adaptif'}. Saat stres, kamu mencari ${emotionalLvl > 65 ? 'orang terdekat untuk sharing' : 'solusi mandiri & introspeksi'}. 
+        Kelebihan terbesarmu adalah kemampuan melihat gambaran besar tanpa melupakan detail, sementara kekurangan yang bisa diasah adalah lebih berani mengambil risiko. 
+        Potensi bakat terpendammu ada di bidang ${careerRec} dan seni kolaborasi. Orang lain sering merasa nyaman curhat padamu karena kedalaman empati yang tinggi. 
+        Ingatlah, seperti kata Carl Jung: "Siapa yang melihat ke luar, bermimpi; siapa yang melihat ke dalam, bangun." Kamu adalah karya seni yang terus berkembang. Teruslah jadi versi terbaikmu. 🌟`;
+        
+        return {
+            mbti, mbtiLabel, enneagram, discDominant, discFull, introExtro,
+            creativityLvl, empathyLvl, logicLvl, disciplineLvl, emotionalLvl,
+            bigFive, careerRec, description, characterDominant: discFull,
+            talents: careerRec === 'AI Engineer' ? 'AI & Logical Problem Solving' : 'Komunikasi & Relasi'
+        };
+    };
+    
+    // ----------------------------- QUESTIONS (70 soal, natural & engaging) -----------------------------
+    const questions = [
+        "Saat ada proyek kelompok, aku lebih suka memimpin arah diskusi.", "Aku seringkali larut dalam imajinasi dan skenario 'bagaimana jika'.", "Mengikuti jadwal terasa membebani bagiku.",
+        "Aku lebih mudah memahami perasaan orang lain tanpa mereka bicara.", "Aku suka mengeksplorasi ide-ide abstrak ketimbang fakta detail.", "Keputusan penting kubuat berdasarkan analisis data, bukan firasat.",
+        "Aku sering jadi 'penengah' saat teman-teman berdebat.", "Aku sangat terorganisir dengan semua daftar tugas.", "Di pesta, aku bisa asyik sendiri atau segera mencari sudut tenang.",
+        "Aku lebih suka pekerjaan yang punya aturan jelas.", "Aku suka mempelajari hal random seperti filosofi atau alien.", "Jika ada konflik, aku berusaha menjaga harmoni meski mengalah.",
+        "Aku cepat bosan dengan rutinitas yang itu-itu saja.", "Aku suka merencanakan liburan jauh-jauh hari.", "Kritik pedas membuatku down seharian.",
+        "Aku lebih suka kerja sendirian daripada tim besar.", "Kreativitas adalah hal yang paling penting bagiku.", "Ketika sedih, aku cenderung menyendiri dulu.",
+        "Aku suka tantangan dan kompetisi.", "Aku suka membantu orang tanpa diminta.", "Teknologi baru membuatku antusias untuk belajar.",
+        "Aku sering memikirkan masa depan dalam skala besar.", "Aku mudah membaca suasana hati seseorang.", "Aku selalu tepat waktu untuk setiap janji.",
+        "Aku lebih suka teori daripada praktek langsung.", "Aku butuh waktu sendiri untuk mengisi ulang energi.", "Aku cenderung perfeksionis dalam pekerjaan.",
+        "Aku mudah bergaul dengan siapa saja.", "Aku sering mempertanyakan hal-hal yang dianggap biasa.", "Jika ada masalah, yang kucari adalah solusi, bukan siapa yang salah.",
+        "Aku jarang menunjukkan emosi berlebihan di depan umum.", "Aku punya mimpi besar dan berusaha mewujudkannya.", "Aku lebih tertarik pada seni daripada sains murni.",
+        "Aku suka bercanda dan menghibur orang.", "Aku cukup disiplin mengatur keuangan.", "Aku merasa dunia ini butuh lebih banyak kebaikan.",
+        "Aku sering overthinking tentang keputusan kecil.", "Aku ingin pekerjaanku berdampak sosial.", "Aku cepat belajar hal baru secara otodidak.",
+        "Aku suka menulis jurnal atau catatan pribadi.", "Dalam tim, aku lebih suka menjadi kontributor ide-ide baru.", "Aku jarang mengambil risiko besar dalam hidup.",
+        "Saat sedih, musik bisa mengubah suasanaku.", "Aku suka mengerjakan puzzle atau game strategi.", "Aku selalu memikirkan konsekuensi jangka panjang.",
+        "Aku sangat menghargai waktu luang untuk merenung.", "Aku mudah terinspirasi oleh film atau buku.", "Aku sering tidak sengaja menyakiti perasaan orang karena jujur.",
+        "Aku suka adventure dan hal-hal baru.", "Aku orang yang dapat diandalkan dalam keadaan darurat.", "Aku suka debat ide untuk mempertajam logika.",
+        "Aku sangat peka dengan ketidakadilan.", "Aku lebih suka informasi visual daripada teks.", "Aku suka menjadi pusat perhatian sesekali.",
+        "Aku selalu berusaha belajar dari kesalahan.", "Aku menikmati kerja yang detail dan presisi.", "Aku sangat peduli dengan penampilan dan estetika.",
+        "Aku bisa memotivasi orang lain dengan mudah.", "Aku sering jadi 'penasihat' curhatan teman-teman.", "Aku suka membuat sistem atau template agar efisien.",
+        "Aku percaya intuisi adalah petunjuk terbaik.", "Aku suka traveling ke tempat yang belum pernah dikunjungi.", "Aku merasa menjadi versi terbaik saat membantu orang lain."
+    ].slice(0, 66);  // total 66 pertanyaan
+        
+    // State Management
+    let appState = {
+        step: 'landing', // landing, name, test, loading, result
+        userName: '',
+        currentQuestionIndex: 0,
+        answers: new Array(questions.length).fill(0),
+        personalityData: null,
+        progressPercent: 0
+    };
+    
+    // Helper update UI
+    let currentChartRadar = null, currentChartCircular = null;
+    
+    function render() {
+        const app = document.getElementById('app');
+        if (appState.step === 'landing') {
+            app.innerHTML = LandingPage();
+            initParticles();
+            attachLandingEvents();
+        } else if (appState.step === 'name') {
+            app.innerHTML = NameInputPage();
+            attachNameEvents();
+        } else if (appState.step === 'test') {
+            app.innerHTML = TestPage();
+            attachTestEvents();
+            updateProgressBar();
+        } else if (appState.step === 'loading') {
+            app.innerHTML = LoadingAnalysis();
+            simulateAI();
+        } else if (appState.step === 'result') {
+            app.innerHTML = ResultDashboard();
+            attachResultEvents();
+            renderCharts();
+        }
+    }
+    
+    // UI Components
+    function LandingPage() {
+        return `
+            <div class="min-h-screen flex flex-col items-center justify-center px-4 relative z-10">
+                <div class="text-center max-w-4xl mx-auto animate-fade-in-up">
+                    <div class="inline-block glass px-5 py-2 rounded-full mb-6 text-sm font-semibold tracking-wide">
+                        <i class="fas fa-brain mr-2 text-purple-400"></i> AI-Powered Personality 2026
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-purple-300 to-blue-400 bg-clip-text text-transparent">PersonaMind AI</h1>
+                    <p class="text-xl md:text-2xl mt-6 text-gray-300">Kenali Dirimu Lebih Dalam</p>
+                    <p class="text-gray-400 mt-2">AI Personality Analyzer · Super Akurat · Tanpa Login</p>
+                    <button id="startBtn" class="neon-btn mt-10 px-10 py-4 rounded-full text-lg font-semibold text-white transition-all flex items-center gap-3 mx-auto"><i class="fas fa-rocket"></i> Mulai Tes Sekarang</button>
+                    <div class="mt-12 flex flex-wrap gap-4 justify-center text-sm text-gray-400"><span><i class="fas fa-chart-line"></i> 70+ Pertanyaan Dinamis</span><span><i class="fas fa-robot"></i> Analisis AI Mendalam</span><span><i class="fas fa-chart-pie"></i> 16 Tipe MBTI</span></div>
+                </div>
+                <div class="absolute bottom-10 left-0 right-0 text-center text-xs text-gray-500">✨ Futuristik · Glassmorphism · Personality Insight</div>
+            </div>
+        `;
+    }
+    
+    function NameInputPage() {
+        return `
+            <div class="min-h-screen flex items-center justify-center p-4">
+                <div class="glass-card p-8 md:p-12 w-full max-w-md text-center">
+                    <i class="fas fa-user-astronaut text-5xl text-purple-400 mb-4"></i>
+                    <h2 class="text-3xl font-bold">Halo, Siapa Namamu?</h2>
+                    <p class="text-gray-300 mt-2">Ketik nama lengkap untuk memulai perjalanan mengenal dirimu.</p>
+                    <input type="text" id="fullName" placeholder="Nama Lengkap" class="w-full mt-8 p-4 rounded-xl bg-white/10 border border-purple-500/30 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white text-center text-lg">
+                    <button id="nextTestBtn" class="neon-btn w-full mt-6 py-3 rounded-xl font-semibold"><i class="fas fa-arrow-right"></i> Lanjutkan Tes</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    function TestPage() {
+        let q = questions[appState.currentQuestionIndex];
+        let percent = Math.floor((appState.currentQuestionIndex / questions.length) * 100);
+        return `
+            <div class="min-h-screen flex flex-col items-center justify-center p-4">
+                <div class="w-full max-w-3xl glass-card p-6 md:p-8">
+                    <div class="flex justify-between text-sm text-gray-300 mb-2"><span>${appState.currentQuestionIndex+1}/${questions.length}</span><span>${percent}% Complete</span></div>
+                    <div class="h-2 bg-gray-700 rounded-full overflow-hidden"><div class="progress-fill h-full transition-all duration-300" style="width:${percent}%"></div></div>
+                    <div class="mt-8 text-2xl md:text-3xl font-medium leading-relaxed">${q}</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
+                        <button class="answer-btn glass p-4 rounded-xl hover:bg-purple-500/20 transition text-left" data-val="0">❌ Sangat Tidak Setuju</button>
+                        <button class="answer-btn glass p-4 rounded-xl hover:bg-purple-500/20 transition" data-val="1">😐 Tidak Setuju</button>
+                        <button class="answer-btn glass p-4 rounded-xl hover:bg-purple-500/20 transition" data-val="2">🤔 Netral</button>
+                        <button class="answer-btn glass p-4 rounded-xl hover:bg-purple-500/20 transition" data-val="3">😊 Setuju</button>
+                        <button class="answer-btn glass p-4 rounded-xl hover:bg-purple-500/20 transition" data-val="4">🔥 Sangat Setuju</button>
+                    </div>
+                    <div class="mt-6 text-center text-sm text-purple-300"><i class="fas fa-microphone-alt"></i> AI Assistant: Semakin jujur, semakin dalam insight-nya!</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    function LoadingAnalysis() {
+        return `
+            <div class="min-h-screen flex flex-col items-center justify-center text-center">
+                <div class="relative"><div class="w-32 h-32 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div><i class="fas fa-brain absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl text-purple-400"></i></div>
+                <h2 class="text-3xl font-bold mt-8">Menganalisis Kepribadian..</h2>
+                <p class="text-gray-300 mt-2">AI sedang memindai 70+ dimensi, memetakan Big Five, MBTI & D
